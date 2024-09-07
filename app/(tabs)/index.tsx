@@ -1,70 +1,78 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import AntDesign from "@expo/vector-icons/AntDesign";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { useApp } from "@/hooks/useApp";
+import { useDidMount } from "@/hooks/useDidMount";
+import { useNavigation } from "@/hooks/useNavigation";
+import React from "react";
 
 export default function HomeScreen() {
+  const { push } = useNavigation();
+  const { clearProductDetails } = useApp();
+
+  useDidMount(() => {
+    clearProductDetails();
+  });
+
+  const handleOnPressCamera = () => {
+    push("/productDetails");
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Image
+        source={require("@/assets/images/better-prices-wallpaper.jpeg")}
+        style={styles.wallpaper}
+      />
+
+      {/* <Image source={require("@/assets/images/logo.png")} style={styles.logo} /> */}
+
+      {/* <Spacer size="lg" /> */}
+
+      <TouchableOpacity onPress={handleOnPressCamera}>
+        <View style={styles.scanActionContainer}>
+          <AntDesign
+            name="scan1"
+            size={64}
+            color="black"
+            onPress={handleOnPressCamera}
+          />
+
+          <Text style={styles.scanActionText}>Scan a Product</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    padding: 16,
+    backgroundColor: "#fff",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  wallpaper: {
+    position: "absolute",
+    opacity: 0.3,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  scanActionContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scanActionText: {
+    fontSize: 24,
   },
 });
