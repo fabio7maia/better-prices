@@ -1,7 +1,6 @@
 import { Spacer } from "@/components/spacer";
 import { XPCamera } from "@/components/xpCamera";
 import { XPHeader } from "@/components/xpHeader";
-import { productCrud } from "@/db/crud";
 import { TProductDb } from "@/db/types";
 import { useApp } from "@/hooks/useApp";
 import { useProductCrud } from "@/hooks/useProductCrud";
@@ -12,7 +11,6 @@ import {
   CameraCapturedPicture,
   useCameraPermissions,
 } from "expo-camera";
-// import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
@@ -28,7 +26,8 @@ export default function ProductDetailsScreen() {
     screenMode: "scanProduct",
   });
   const [permission, requestPermission] = useCameraPermissions();
-  const { getProductByReference } = useProductCrud();
+  const { getProductByReference, createProduct, updateProduct } =
+    useProductCrud();
   const { show } = useToast();
 
   const setState = (newState: Partial<TState>, refresh = true) => {
@@ -125,9 +124,9 @@ export default function ProductDetailsScreen() {
 
     try {
       if (product.id) {
-        await productCrud.updateProduct(product);
+        await updateProduct(product);
       } else {
-        await productCrud.createProduct(product);
+        await createProduct(product);
       }
 
       show("Product saved successfully");
