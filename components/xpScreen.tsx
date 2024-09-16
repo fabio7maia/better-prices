@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingTop: 32,
-    height: Dimensions.get("window").height - StatusBar.currentHeight!,
+    /*height: Dimensions.get("window").height - StatusBar.currentHeight!,*/
     width: Dimensions.get("screen").width,
   },
   wallpaperContainer: {
