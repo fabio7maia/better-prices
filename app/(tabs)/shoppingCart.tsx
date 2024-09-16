@@ -1,11 +1,12 @@
 import { ThemedText } from "@/components/ThemedText";
 import { XPScreen } from "@/components/xpScreen";
+import { XPTable } from "@/components/xpTable";
 import { XPView } from "@/components/xpView";
 import { productCrud } from "@/db/crud";
 import { TProductDb } from "@/db/types";
 // import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 type TState = {
   products: TProductDb[];
@@ -33,18 +34,36 @@ export default function TabProductsListScreen() {
     fillListOfProducts();
   }, []);
 
+  // console.log("TabProductsListScreen", {
+  //   products: JSON.stringify(state.current.products),
+  // });
+
   return (
     <XPScreen header={{}}>
       <XPView style={styles.titleContainer}>
         <ThemedText type="title">List of Products</ThemedText>
       </XPView>
 
+      {/* <XPSpacer size="lg" /> */}
+
       <View style={styles.listContainer}>
-        {state.current.products.map((product) => (
-          <Text style={styles.product} key={product.id}>
-            {product.name} - {product.price}
-          </Text>
-        ))}
+        <XPTable
+          items={state.current.products}
+          rowIdentifier={(row) => row.id}
+          columns={[
+            {
+              key: "name",
+              label: "Name",
+              render: (row) => row.name,
+            },
+            {
+              key: "price",
+              label: "Price",
+              render: (row) => `${row.price} €`,
+              props: { style: { numeric: true } },
+            },
+          ]}
+        />
       </View>
     </XPScreen>
   );

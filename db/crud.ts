@@ -42,14 +42,16 @@ export const productCrud = {
   getProducts: async () => {
     const db = await getDb();
 
-    const statement = await db.prepareAsync("select * from products");
+    let statement;
 
     try {
+      statement = await db.prepareAsync("select * from products");
+
       let result = await statement.executeAsync();
 
       return (await result.getAllAsync()) as TProductDb[];
     } finally {
-      await statement.finalizeAsync();
+      await statement?.finalizeAsync();
     }
   },
   createProduct: async ({ reference, image, name, price }: TProduct) => {
@@ -58,11 +60,13 @@ export const productCrud = {
     );
     const db = await getDb();
 
-    const statement = await db.prepareAsync(
-      "INSERT INTO products (reference, image, name, price) VALUES ($reference, $image, $name, $price)"
-    );
+    let statement;
 
     try {
+      statement = await db.prepareAsync(
+        "INSERT INTO products (reference, image, name, price) VALUES ($reference, $image, $name, $price)"
+      );
+
       return await statement.executeAsync({
         $reference: reference,
         $image: image,
@@ -70,17 +74,19 @@ export const productCrud = {
         $price: price,
       });
     } finally {
-      await statement.finalizeAsync();
+      await statement?.finalizeAsync();
     }
   },
   updateProduct: async ({ id, reference, image, name, price }: TProductDb) => {
     const db = await getDb();
 
-    const statement = await db.prepareAsync(
-      "update products set reference = $reference, image = $image, name = $name, price = $price where id = $id"
-    );
+    let statement;
 
     try {
+      statement = await db.prepareAsync(
+        "update products set reference = $reference, image = $image, name = $name, price = $price where id = $id"
+      );
+
       return await statement.executeAsync({
         $reference: reference,
         $image: image,
@@ -89,20 +95,22 @@ export const productCrud = {
         $id: id,
       });
     } finally {
-      await statement.finalizeAsync();
+      await statement?.finalizeAsync();
     }
   },
   deleteProduct: async ({ id }: Pick<TProductDb, "id">) => {
     const db = await getDb();
 
-    const statement = await db.prepareAsync("delete products where id = $id");
+    let statement;
 
     try {
+      statement = await db.prepareAsync("delete products where id = $id");
+
       return await statement.executeAsync({
         $id: id,
       });
     } finally {
-      await statement.finalizeAsync();
+      await statement?.finalizeAsync();
     }
   },
 };

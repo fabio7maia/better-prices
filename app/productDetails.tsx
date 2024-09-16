@@ -1,6 +1,8 @@
-import { Spacer } from "@/components/spacer";
 import { XPCamera } from "@/components/xpCamera";
 import { XPHeader } from "@/components/xpHeader";
+import { XPInputNumber } from "@/components/xpInputNumber";
+import { XPInputText } from "@/components/xpInputText";
+import { XPSpacer } from "@/components/xpSpacer";
 import { TProductDb } from "@/db/types";
 import { useApp } from "@/hooks/useApp";
 import { useProductCrud } from "@/hooks/useProductCrud";
@@ -13,7 +15,7 @@ import {
 } from "expo-camera";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 type TState = {
   screenMode: "scanProduct" | "productDetailsForm" | "productDetailsImage";
@@ -155,7 +157,7 @@ export default function ProductDetailsScreen() {
         <View style={styles.formContainer}>
           <XPHeader image={productDetails?.image!} />
 
-          <Spacer size="sm" />
+          <XPSpacer size="sm" />
 
           <Button
             icon="camera"
@@ -165,36 +167,33 @@ export default function ProductDetailsScreen() {
             Set product image
           </Button>
 
-          <Spacer size="md" />
+          <XPSpacer size="md" />
 
-          <TextInput
+          <XPInputText
             label="Product Id."
             value={productDetails?.reference?.toString()}
             disabled
           />
 
-          <Spacer size="md" />
+          <XPSpacer size="md" />
 
-          <TextInput
+          <XPInputText
             mode="outlined"
             label="Name"
             value={productDetails?.name}
-            onChangeText={(text) => setProductDetails({ name: text })}
+            onChange={(text) => setProductDetails({ name: text })}
           />
 
-          <Spacer size="md" />
+          <XPSpacer size="md" />
 
-          <TextInput
+          <XPInputNumber
             mode="outlined"
             label="Price"
             value={productDetails?.price?.toString()}
-            keyboardType="numeric"
-            onChangeText={(text) =>
-              setProductDetails({ price: Number(text.replace(",", ".")) })
-            }
+            onChange={(text) => setProductDetails({ price: text as number })}
           />
 
-          <Spacer size="xl" />
+          <XPSpacer size="xl" />
 
           <Button mode="contained" onPress={handleOnClickSave}>
             Save

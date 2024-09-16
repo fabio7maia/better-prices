@@ -1,6 +1,7 @@
 import { Dimensions, Image, StatusBar, StyleSheet, View } from "react-native";
 
 import React, { PropsWithChildren } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { TXPHeaderProps, XPHeader } from "./xpHeader";
 import { XPView } from "./xpView";
 
@@ -19,42 +20,49 @@ export const XPScreen = ({
   wallpaper,
 }: TXPScreenProps) => {
   return (
-    <XPView style={styles.rootContainer}>
-      {wallpaper && (
-        <>
-          <XPView style={styles.wallpaperContainer}>
-            <Image
-              source={
-                wallpaper.image ||
-                require("@/assets/images/better-prices-wallpaper.jpeg")
+    <SafeAreaView>
+      <XPView style={styles.rootContainer}>
+        {wallpaper && (
+          <>
+            <XPView style={styles.wallpaperContainer}>
+              <Image
+                source={
+                  wallpaper.image ||
+                  require("@/assets/images/better-prices-wallpaper.jpeg")
+                }
+                style={{ ...styles.imageWallpaper, opacity }}
+              />
+            </XPView>
+
+            <View style={{ ...styles.childrenContainer }}>{children}</View>
+          </>
+        )}
+
+        {header && (
+          <>
+            <XPHeader
+              image={require("@/assets/images/better-prices-wallpaper.jpeg")}
+              backgroundColor={
+                header.backgroundColor || { light: "#A1CEDC", dark: "#1D3D47" }
               }
-              style={{ ...styles.imageWallpaper, opacity }}
             />
-          </XPView>
-
-          <View style={{ ...styles.childrenContainer }}>{children}</View>
-        </>
-      )}
-
-      {header && (
-        <>
-          <XPHeader
-            image={require("@/assets/images/better-prices-wallpaper.jpeg")}
-            backgroundColor={
-              header.backgroundColor || { light: "#A1CEDC", dark: "#1D3D47" }
-            }
-          />
-          <XPView style={{ ...styles.childrenContainer }}>{children}</XPView>
-        </>
-      )}
-    </XPView>
+            <XPView style={{ ...styles.childrenContainer }}>{children}</XPView>
+          </>
+        )}
+      </XPView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  rootContainer: {},
+  rootContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
   childrenContainer: {
-    paddingTop: StatusBar.currentHeight! + 20,
+    display: "flex",
+    flexDirection: "column",
+    paddingTop: 32,
     height: Dimensions.get("window").height - StatusBar.currentHeight!,
     width: Dimensions.get("screen").width,
   },
