@@ -37,7 +37,9 @@ export const XPTable = <TItem extends object>({
       {items.map((item) => (
         <DataTable.Row key={rowIdentifier(item)}>
           {columns.map((col) => (
-            <DataTable.Cell key={col.key}>{col.render(item)}</DataTable.Cell>
+            <DataTable.Cell {...col.props} key={col.key}>
+              {col.render(item)}
+            </DataTable.Cell>
           ))}
         </DataTable.Row>
       ))}
