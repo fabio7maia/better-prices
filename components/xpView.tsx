@@ -1,4 +1,4 @@
-import { View, type ViewProps } from "react-native";
+import { type ViewProps, ScrollView, View } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -18,5 +18,9 @@ export function XPView({
     "background"
   );
 
-  return <View style={[{ backgroundColor }, style]} {...otherProps} />;
+  return (
+    <ScrollView>
+      <View style={[{ backgroundColor }, style]} {...otherProps} />
+    </ScrollView>
+  );
 }
