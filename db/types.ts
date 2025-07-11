@@ -3,6 +3,8 @@ export type TProduct = {
   image: string;
   name: string;
   price: number;
+  stars?: number;
+  created_at?: string;
 };
 
 export type TProductDb = TProduct & {
