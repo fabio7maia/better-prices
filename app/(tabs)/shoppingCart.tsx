@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { XPScreen } from "@/components/xpScreen";
+import { XPSpacer } from "@/components/xpSpacer";
 import { XPTable } from "@/components/xpTable";
 import { XPView } from "@/components/xpView";
 import { productCrud } from "@/db/crud";
@@ -44,7 +45,7 @@ export default function TabProductsListScreen() {
         <ThemedText type="title">List of Products</ThemedText>
       </XPView>
 
-      {/* <XPSpacer size="lg" /> */}
+      <XPSpacer size="lg" />
 
       <View style={styles.listContainer}>
         <XPTable

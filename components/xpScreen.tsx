@@ -1,4 +1,4 @@
-import { Dimensions, Image, StatusBar, StyleSheet, View } from "react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
 
 import React, { PropsWithChildren } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,7 +34,7 @@ export const XPScreen = ({
               />
             </XPView>
 
-            <View style={{ ...styles.childrenContainer }}>{children}</View>
+            <XPView style={{ ...styles.childrenContainer }}>{children}</XPView>
           </>
         )}
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingTop: 32,
-    height: Dimensions.get("window").height - StatusBar.currentHeight!,
+    /*height: Dimensions.get("window").height - StatusBar.currentHeight!,*/
     width: Dimensions.get("screen").width,
   },
   wallpaperContainer: {

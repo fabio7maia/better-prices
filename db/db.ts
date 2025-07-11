@@ -1,7 +1,7 @@
 import * as SQLite from "expo-sqlite";
 
 export const getDb = async () =>
-  await SQLite.openDatabaseAsync("betterPrices.db");
+  await SQLite.openDatabaseAsync("betterPrices.db", { useNewConnection: true });
 
 export const initDb = async () => {
   const db = await getDb();
