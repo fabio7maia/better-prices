@@ -223,9 +223,11 @@ export default function ProductDetailsScreen() {
 
             <XPSegmentedButtons
               buttons={[
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-                { label: "3", value: "3" },
+                { label: "⭐", value: "1" },
+                { label: "⭐⭐", value: "2" },
+                { label: "⭐⭐⭐", value: "3" },
+                { label: "⭐⭐⭐⭐", value: "4" },
+                { label: "⭐⭐⭐⭐⭐", value: "5" },
               ]}
               label="Stars"
               value={productDetails?.stars?.toString()}
