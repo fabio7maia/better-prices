@@ -1,4 +1,5 @@
 import { TextInput } from "react-native-paper";
+import { XPInputField } from "./xpInputField";
 
 type TXPInputNumberProps = {
   mode?: "outlined" | "flat";
@@ -27,13 +28,18 @@ export const XPInputNumber = ({
   };
 
   return (
-    <TextInput
-      keyboardType="numeric"
-      mode={mode}
+    <XPInputField
+      inputRender={() => (
+        <TextInput
+          keyboardType="numeric"
+          mode={mode}
+          // label={label}
+          value={valueString}
+          onChangeText={handleOnChange}
+          onBlur={() => handleOnChange(valueString, true)}
+        />
+      )}
       label={label}
-      value={valueString}
-      onChangeText={handleOnChange}
-      onBlur={() => handleOnChange(valueString, true)}
     />
   );
 };
