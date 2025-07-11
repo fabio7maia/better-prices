@@ -51,7 +51,8 @@ export default function TabProductsListScreen() {
       <View style={styles.listContainer}>
         {state.current.products.map((product) => (
           <Text style={styles.product} key={product.id}>
-            {product.name} - {product.price} - {product.stars} ⭐
+            {product.name} - {product.price} -{" "}
+            {Array.from({ length: product.stars || 0 }, (_, i) => "⭐")}
           </Text>
         ))}
       </View>

@@ -70,7 +70,9 @@ export default function TabProductsListScreen() {
             {
               key: "stars",
               label: "Stars",
-              render: (row) => `${row.stars} ⭐`,
+              render: (row) => (
+                <>{Array.from({ length: row.stars || 0 }, (_, i) => "⭐")}</>
+              ),
             },
           ]}
           onRowClick={(row) => {
