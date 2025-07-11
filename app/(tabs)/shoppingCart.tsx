@@ -5,7 +5,9 @@ import { XPTable } from "@/components/xpTable";
 import { XPView } from "@/components/xpView";
 import { productCrud } from "@/db/crud";
 import { TProductDb } from "@/db/types";
+import { useApp } from "@/hooks/useApp";
 // import { Image } from "expo-image";
+import { useNavigation } from "@/hooks/useNavigation";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -18,6 +20,8 @@ export default function TabProductsListScreen() {
   const state = React.useRef<TState>({
     products: [],
   });
+  const { setProductDetails } = useApp();
+  const { navigate, push } = useNavigation();
 
   const setState = (newState: Partial<TState>, refresh = true) => {
     state.current = { ...state.current, ...newState };
@@ -63,7 +67,20 @@ export default function TabProductsListScreen() {
               render: (row) => `${row.price} €`,
               props: { style: { numeric: true } },
             },
+            {
+              key: "stars",
+              label: "Stars",
+              render: (row) => `${row.stars} ⭐`,
+            },
           ]}
+          onRowClick={(row) => {
+            setProductDetails(row);
+
+            navigate({
+              pathname: "/productDetails",
+              params: { productId: row.id },
+            });
+          }}
         />
       </View>
     </XPScreen>

@@ -1,11 +1,15 @@
 import { XPCamera } from "@/components/xpCamera";
+import { XPFab } from "@/components/xpFab";
 import { XPHeader } from "@/components/xpHeader";
 import { XPInputNumber } from "@/components/xpInputNumber";
 import { XPInputText } from "@/components/xpInputText";
+import { XPSegmentedButtons } from "@/components/xpSegmentedButtons";
 import { XPSpacer } from "@/components/xpSpacer";
+import { XPView } from "@/components/xpView";
 import { TProductDb } from "@/db/types";
 import { useApp } from "@/hooks/useApp";
 import { useProductCrud } from "@/hooks/useProductCrud";
+import { useSaveImage } from "@/hooks/useSaveImage";
 import { useToast } from "@/hooks/useToast";
 import { useWillMount } from "@/hooks/useWillMount";
 import {
@@ -13,6 +17,7 @@ import {
   CameraCapturedPicture,
   useCameraPermissions,
 } from "expo-camera";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
@@ -24,13 +29,15 @@ type TState = {
 export default function ProductDetailsScreen() {
   const [_, setTick] = React.useState(0);
   const { clearProductDetails, setProductDetails, productDetails } = useApp();
+  const { productId } = useLocalSearchParams();
   const state = React.useRef<TState>({
-    screenMode: "scanProduct",
+    screenMode: productId ? "productDetailsForm" : "scanProduct",
   });
   const [permission, requestPermission] = useCameraPermissions();
   const { getProductByReference, createProduct, updateProduct } =
     useProductCrud();
   const { show } = useToast();
+  const { saveImage } = useSaveImage();
 
   const setState = (newState: Partial<TState>, refresh = true) => {
     state.current = { ...state.current, ...newState };
@@ -39,8 +46,10 @@ export default function ProductDetailsScreen() {
   };
 
   useWillMount(() => {
-    clearProductDetails();
-    console.log("ProductDetailsScreen > useWillMount");
+    if (!productId) {
+      clearProductDetails();
+      console.log("ProductDetailsScreen > useWillMount");
+    }
   });
 
   if (!permission) {
@@ -95,9 +104,13 @@ export default function ProductDetailsScreen() {
 
       console.log("handleOnCatchPicture > product 2");
     } else {
+      const imageUri = (image as CameraCapturedPicture).uri;
+
       setProductDetails({
-        image: (image as CameraCapturedPicture).uri,
+        image: imageUri,
       });
+
+      saveImage(imageUri);
     }
 
     setState({
@@ -143,64 +156,95 @@ export default function ProductDetailsScreen() {
   });
 
   return (
-    <View style={styles.container}>
-      {["scanProduct", "productDetailsImage"].includes(
-        state.current.screenMode
-      ) && (
-        <XPCamera
-          onClickExit={handleOnClickBackInCamera}
-          onCatchPicture={handleOnCatchPicture}
-          type={!productDetails?.reference ? "barcode" : "picture"}
-        />
-      )}
-      {state.current.screenMode === "productDetailsForm" && (
-        <View style={styles.formContainer}>
-          <XPHeader image={productDetails?.image!} />
-
-          <XPSpacer size="sm" />
-
-          <Button
-            icon="camera"
-            mode="text"
-            onPress={handleOnClickSetProductImage}
-          >
-            Set product image
-          </Button>
-
-          <XPSpacer size="md" />
-
-          <XPInputText
-            label="Product Id."
-            value={productDetails?.reference?.toString()}
-            disabled
+    <>
+      <XPFab
+        actions={[
+          {
+            icon: "bag-add",
+            label: "Add to shopping cart",
+            onClick: () => {
+              show("Added to shopping cart");
+            },
+          },
+        ]}
+        icon={{ closed: "menu", opened: "close" }}
+      />
+      <XPView style={styles.container}>
+        {["scanProduct", "productDetailsImage"].includes(
+          state.current.screenMode
+        ) && (
+          <XPCamera
+            onClickExit={handleOnClickBackInCamera}
+            onCatchPicture={handleOnCatchPicture}
+            type={!productDetails?.reference ? "barcode" : "picture"}
           />
+        )}
+        {state.current.screenMode === "productDetailsForm" && (
+          <View style={styles.formContainer}>
+            <XPHeader image={productDetails?.image!} />
 
-          <XPSpacer size="md" />
+            <XPSpacer size="sm" />
 
-          <XPInputText
-            mode="outlined"
-            label="Name"
-            value={productDetails?.name}
-            onChange={(text) => setProductDetails({ name: text })}
-          />
+            <Button
+              icon="camera"
+              mode="text"
+              onPress={handleOnClickSetProductImage}
+            >
+              Set product image
+            </Button>
 
-          <XPSpacer size="md" />
+            <XPSpacer size="md" />
 
-          <XPInputNumber
-            mode="outlined"
-            label="Price"
-            value={productDetails?.price?.toString()}
-            onChange={(text) => setProductDetails({ price: text as number })}
-          />
+            <XPInputText
+              label="Product Id."
+              value={productDetails?.reference?.toString()}
+              disabled
+            />
 
-          <XPSpacer size="xl" />
+            <XPSpacer size="md" />
 
-          <Button mode="contained" onPress={handleOnClickSave}>
-            Save
-          </Button>
-        </View>
-      )}
-    </View>
+            <XPInputText
+              mode="outlined"
+              label="Name"
+              value={productDetails?.name}
+              onChange={(text) => setProductDetails({ name: text })}
+            />
+
+            <XPSpacer size="md" />
+
+            <XPInputNumber
+              mode="outlined"
+              label="Price"
+              value={productDetails?.price?.toString()}
+              onChange={(text) => setProductDetails({ price: text as number })}
+            />
+
+            <XPSpacer size="md" />
+
+            <XPSegmentedButtons
+              buttons={[
+                { label: "⭐", value: "1" },
+                { label: "⭐⭐", value: "2" },
+                { label: "⭐⭐⭐", value: "3" },
+                { label: "⭐⭐⭐⭐", value: "4" },
+                { label: "⭐⭐⭐⭐⭐", value: "5" },
+              ]}
+              label="Stars"
+              value={productDetails?.stars?.toString()}
+              onChange={(value: any) =>
+                setProductDetails({ stars: Number(value) })
+              }
+            />
+
+            <XPSpacer size="xl" />
+
+            <Button mode="contained" onPress={handleOnClickSave}>
+              Save
+            </Button>
+          </View>
+        )}
+      </XPView>
+    </>
   );
 }
 
@@ -208,6 +252,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    marginBottom: 32,
   },
   message: {
     textAlign: "center",

@@ -1,4 +1,5 @@
 import { TextInput } from "react-native-paper";
+import { XPInputField } from "./xpInputField";
 
 type TXPInputTextProps = {
   disabled?: boolean;
@@ -16,12 +17,17 @@ export const XPInputText = ({
   value,
 }: TXPInputTextProps) => {
   return (
-    <TextInput
-      disabled={disabled}
-      mode={mode}
+    <XPInputField
+      inputRender={() => (
+        <TextInput
+          disabled={disabled}
+          mode={mode}
+          // label={label}
+          value={value}
+          onChangeText={onChange}
+        />
+      )}
       label={label}
-      value={value}
-      onChangeText={onChange}
     />
   );
 };

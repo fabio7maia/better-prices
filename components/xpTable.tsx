@@ -12,12 +12,14 @@ type TTableProps<TItem extends object> = {
   columns: TTableColumn<TItem>[];
   items: TItem[];
   rowIdentifier: (row: TItem) => string | number;
+  onRowClick?: (row: TItem) => void;
 };
 
 export const XPTable = <TItem extends object>({
   columns,
   items,
   rowIdentifier,
+  onRowClick,
 }: TTableProps<TItem>) => {
   return (
     <DataTable>
@@ -35,7 +37,13 @@ export const XPTable = <TItem extends object>({
 
       {/* {items.slice(from, to).map((item) => ( */}
       {items.map((item) => (
-        <DataTable.Row key={rowIdentifier(item)}>
+        <DataTable.Row
+          key={rowIdentifier(item)}
+          onPress={() => {
+            console.log("XPTable > row > onPress", { item });
+            onRowClick?.(item);
+          }}
+        >
           {columns.map((col) => (
             <DataTable.Cell {...col.props} key={col.key}>
               {col.render(item)}
